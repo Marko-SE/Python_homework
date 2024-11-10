@@ -115,9 +115,3 @@
     print(GDP_2018)
     print(italy_gdp, "trillion USD")
 ~~~
-~~~ Python 3.12.7
-
-~~~
-~~~ Python 3.12.7
-
-~~~
