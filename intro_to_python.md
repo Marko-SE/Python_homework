@@ -115,3 +115,32 @@
     print(GDP_2018)
     print(italy_gdp, "trillion USD")
 ~~~
+
+***
+
+# Homework Rosalind for 2024_11_13
+## Exercise INI2
+
+~~~ Python 3.12.7
+a=953
+b=831
+c=(a**2+b**2)
+print(c)
+1598770
+~~~
+
+# Homework Slice for 2024_11_13
+## Exercise 17-a
+
+~~~ Python 3.12.7
+wrd="Toscana"
+ans_1=wrd[0:4]
+print(ans_1)
+~~~
+
+~~~ Python 3.12.7
+wrd="Toscana"
+ans_1=wrd[3:8]
+print(ans_1)
+# This seems to work although it isn't the solution.
+~~~
