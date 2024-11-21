@@ -5,7 +5,7 @@ from util import read_input
 # if we had a dictionary of results, how would we pick the maximum GC%?
 
 # if we had a FASTA file, how would we get id-sequencde pairs?
-fasta = read_input('./rosalind_data/test.fasta')
+fasta = read_input('./rosalind_data/rosalind_gc.txt')
 
 sequences = {}
 current_id = ""
