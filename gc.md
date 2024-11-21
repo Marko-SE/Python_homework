@@ -27,8 +27,6 @@ for a in s:
     if a == "G":
         c += 1
 
-c = c * 2
-# c is the number of GC in the DNA sequence
 print (c)
 
 ~~~
