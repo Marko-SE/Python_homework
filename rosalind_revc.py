@@ -10,11 +10,13 @@ def complement(x):
     elif x == "T":
         return "A"
 
-comp = ""
-for base in s:
-    comp = comp + complement(base)
+def complement_sequence(seq):
+    comp = ""
+    for base in seq:
+        comp = comp + complement(base)
+    return comp
 
-print(comp)
+def reverse_complement(seq):
+    return complement_sequence(seq[::-1])
 
-new_comp = comp[::-1]
-print(new_comp)
+print(reverse_complement(s))

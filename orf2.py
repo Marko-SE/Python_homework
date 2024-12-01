@@ -1,28 +1,32 @@
-seq = "AGCCATGTAGCTAACTCAGGTTACATGGGGATGACCCCGCGACTTGGATTAGAGTCTCTTTTGGAATAAGCCTGAATGATCCGAGTAGCATCTCAG"
-start_seq = "AUG"
+from prot import translate, code
+from rosalind_revc import reverse_complement
 
-code = {
-    "UUU": "F",      "CUU": "L",      "AUU": "I",      "GUU": "V",
-    "UUC": "F",      "CUC": "L",      "AUC": "I",      "GUC": "V",
-    "UUA": "L",      "CUA": "L",      "AUA": "I",      "GUA": "V",
-    "UUG": "L",      "CUG": "L",      "AUG": "M",      "GUG": "V",
-    "UCU": "S",      "CCU": "P",      "ACU": "T",      "GCU": "A",
-    "UCC": "S",      "CCC": "P",      "ACC": "T",      "GCC": "A",
-    "UCA": "S",      "CCA": "P",      "ACA": "T",      "GCA": "A",
-    "UCG": "S",      "CCG": "P",      "ACG": "T",      "GCG": "A",
-    "UAU": "Y",      "CAU": "H",      "AAU": "N",      "GAU": "D",
-    "UAC": "Y",      "CAC": "H",      "AAC": "N",      "GAC": "D",
-    "UAA": "Stop",   "CAA": "Q",      "AAA": "K",      "GAA": "E",
-    "UAG": "Stop",   "CAG": "Q",      "AAG": "K",      "GAG": "E",
-    "UGU": "C",      "CGU": "R",      "AGU": "S",      "GGU": "G",
-    "UGC": "C",      "CGC": "R",      "AGC": "S",      "GGC": "G",
-    "UGA": "Stop",   "CGA": "R",      "AGA": "R",      "GGA": "G",
-    "UGG": "W",      "CGG": "R",      "AGG": "R",      "GGG": "G"
-}
+seq = "AGCCATGTAGCTAACTCAGGTTACATGGGGATGACCCCGCGACTTGGATTAGAGTCTCTTTTGGAATAAGCCTGAATGATCCGAGTAGCATCTCAG"
+
+# find all start codons:
+def orf_start_positions(rna):
+    start_positions = []
+    for i in range(len(rna)-2):
+        if rna[i:i+3] == "AUG":
+            start_positions.append(i)
+    return start_positions
+
+# find the open reading frame:
+def find_orfs(rna, start_positions):
+    orfs = []
+    for start in start_positions:
+        orf = ""
+        for i in range(start, len(rna), 3):
+            codon = rna[i:i+3] # find the tripplet in the sequence
+            orf += codon # adds the tripplet to orf
+            if len(codon) < 3:
+                    break
+            if code[codon] == "Stop":
+                orfs.append(orf)
+    return orfs
 
 # make a forward RNA strand:
 forward_rna_s = ""
-
 for base in seq:
     if base == "T":
         base = "U"
@@ -30,64 +34,25 @@ for base in seq:
     else:
         forward_rna_s += base
 
-print(f"This is forward RNA strand {forward_rna_s}")
+# print(f"This is forward RNA strand {forward_rna_s}")
 
 # make a backwards RNA strand:
+backward_dna = reverse_complement(seq)
+back_rna = backward_dna.replace("T", "U")
+# print(f"test for backwards RNA {back_rna}")
 
-back_rna = forward_rna_s[::-1]
-print(f"test for backwards RNA {back_rna}")
+# find start codons in forward and backwards rna strand:
+f_starts = orf_start_positions(forward_rna_s)
+b_starts = orf_start_positions(back_rna)
 
-                    # # make a backwards DNA strand:
-                    # def complement(x):
-                    #     if x == "A":
-                    #         return "T"
-                    #     elif x == "C":
-                    #         return "G"
-                    #     elif x == "G":
-                    #         return "C"
-                    #     elif x == "T":
-                    #         return "A"
+# find open reading frames in both:
+f_orfs = find_orfs(forward_rna_s, f_starts)
+b_orfs = find_orfs(back_rna, b_starts)
 
-                    # back_dna_s = ""
-                    # for base in seq:
-                    #     back_dna_s = back_dna_s + complement(base)
-
-                    # back_strand_dna = back_dna_s[::-1]
-
-                    # # make out of back_strand_dna an RNA strand
-                    # back_rna_s = ""
-
-                    # for base in back_strand_dna:
-                    #     if base == "T":
-                    #         base = "U"
-                    #         back_rna_s += base
-                    #     else:
-                    #         back_rna_s += base
-
-                    # print(f"This is backward RNA strand {back_rna_s}")
-
-
-start_seq_len = len(start_seq)
-
-start_positions = []
-
-# for forward strand:
-for i in range(len(forward_rna_s)-2):
-    if forward_rna_s[i:i+start_seq_len] == start_seq:
-        start_positions.append(i)
-print(start_positions)
-
-
-for start in start_positions:
-    peptide = ""
-    orf = ""
-    for i in range(start, len(forward_rna_s) -2, 3):
-        codon = forward_rna_s[i:i+3] # find the tripplet in the sequence
-        if codon in ["UAA", "UAG", "UGA"]:
-            break
-        orf += codon # adds the tripplet to orf
-        aminoacid = code[codon]
-        peptide += aminoacid
-    print(orf)
-    print(peptide)
-
+orfs = f_orfs + b_orfs # combines the two lists into one list (not string) 
+proteins = list()
+for orf in orfs:
+    protein = translate(orf)
+    if protein not in proteins:
+        proteins.append(protein)
+        print(protein)
