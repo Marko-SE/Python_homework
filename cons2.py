@@ -5,17 +5,22 @@
 from util import read_input
 
 # if we had a FASTA file, how would we get id-sequencde pairs?
-fasta = read_input('./rosalind_data/cons_test.txt')
+fasta = read_input('./rosalind_data/rosalind_cons.txt')
 
 sequences = []
 current_id = ""
+current_seq = ''
 for line in fasta:
     if line[0] == ">":
+        if current_seq != '':
+            sequences.append(current_seq)
+            current_seq = ''
         continue
     else:
-        sequences.append(line.strip()) # makes a list containing just the sequences from the fasta file
-# print(sequences)
+        current_seq += (line.strip()) # makes a string containing just the sequences from the fasta file
 
+sequences.append(current_seq)
+# print(len(sequences))
 
 # Each nucleotide (A, C, G, T) has a list for counts at each position
 n = len(sequences[0])  # Length of each DNA string
@@ -29,14 +34,13 @@ profile = {
 
 # Populate the profile matrix by iterating through the sequences
 for seq in sequences:
+    # print(seq)
     for i, base in enumerate(seq): # enumerate(seq) provides both the index (i) and the character (base) of each nucleotide in the sequence, 
+        # print(i)
         profile[base][i] += 1 # like if seq = "ATCCAGCT": (0, 'A'), (1, 'T'), (2, 'C')...
 
 # print(profile)
 
-# Print the profile matrix
-for nucleotide, counts in profile.items():
-    print(f"{nucleotide}: {' '.join(map(str, counts))}") # map(str, counts) converts each number in the counts list to a string, so it can be joined for printing.
 
 consensus_seq = ""
 
@@ -54,3 +58,6 @@ for i in range(seq_length):
 
 # Print the consensus string
 print(consensus_seq)
+# Print the profile matrix
+for nucleotide, counts in profile.items():
+    print(f"{nucleotide}: {' '.join(map(str, counts))}") # map(str, counts) converts each number in the counts list to a string, so it can be joined for printing.
