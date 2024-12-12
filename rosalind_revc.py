@@ -19,4 +19,6 @@ def complement_sequence(seq):
 def reverse_complement(seq):
     return complement_sequence(seq[::-1])
 
-print(reverse_complement(s))
+if __name__ == "__main__":
+    s = "AAAACCCGGT"
+    print(reverse_complement(s))
